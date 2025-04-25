@@ -7,15 +7,24 @@ from datetime import date, timedelta
 from datetime import datetime, date, timedelta
 
 
-def dejar_comentario(request):
+def dejar_comentario(request, sector):
+    print(f"Sector recibido: {sector}")  # Asegúrate de que el valor de 'sector' se imprime correctamente
+    
     if request.method == 'POST':
         form = ComentarioForm(request.POST)
         if form.is_valid():
-            form.save()
+            comentario = form.save(commit=False)
+            comentario.sector = sector  # Aseguramos que el sector se asigna correctamente
+            comentario.save()
             return redirect('comentario_gracias')
+        else:
+            # Si el formulario no es válido, imprime los errores para depuración
+            print("Errores del formulario:", form.errors)
     else:
-        form = ComentarioForm()
-    return render(request, 'dejar_comentario.html', {'form': form})
+        form = ComentarioForm(initial={'sector': sector})  # Aquí pasamos el sector como valor inicial
+
+    return render(request, 'dejar_comentario.html', {'form': form, 'sector': sector})
+
 
 def comentario_gracias(request):
     return render(request, 'comentario_gracias.html')
@@ -52,3 +61,11 @@ def admin_comentarios(request):
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
     })
+    
+def elegir_sector(request):
+    if request.method == 'POST':
+        sector = request.POST.get('sector')
+        if sector:
+            # Redirigir a la vista para dejar comentario pasando el sector seleccionado
+            return redirect('dejar_comentario', sector=sector)
+    return render(request, 'elegir_sector.html')
