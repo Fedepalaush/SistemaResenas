@@ -12,6 +12,9 @@ def dejar_comentario(request, sector):
     print(f"Sector recibido: {sector}")
 
     if request.method == 'POST':
+        # Imprime los datos que se están enviando en el POST
+        print(f"Datos enviados en el POST: {request.POST}")
+
         form = ComentarioForm(request.POST)
         if form.is_valid():
             comentario = form.save(commit=False)

@@ -94,22 +94,26 @@
                 <th>Eficiencia</th>
                 <th>Limpieza</th>
                 <th>Comentario</th>
+                <th>Sector</th>
+                <th>Atendido por</th>
                 <th>Fecha</th>
             </tr>
         </thead>
         <tbody>
             {% for c in page_obj %}
             <tr>
-                <td>{{ c.nombre }}</td>
-                <td>{{ c.telefono }}</td>
+                <td>{% if c.nombre %}{{ c.nombre|capfirst }}{% else %}-{% endif %}</td>  <!-- Si no tiene nombre, muestra - y capitaliza la primera letra -->
+                <td>{% if c.telefono %}{{ c.telefono }}{% else %}-{% endif %}</td>  <!-- Si no tiene teléfono, muestra - -->
                 <td>{{ c.amabilidad }}</td>
                 <td>{{ c.eficiencia }}</td>
                 <td>{{ c.limpieza }}</td>
-                <td>{% if c.comentario %}{{ c.comentario }}{% else %}<em>Sin comentario</em>{% endif %}</td>
+                <td>{% if c.destacado %}{{ c.destacado }}{% else %}S/C{% endif %}</td>
+                <td>{% if c.sector %}{{ c.sector|capfirst }}{% else %}-{% endif %}</td>  <!-- Si no tiene sector, muestra - y capitaliza la primera letra -->
+                <td>{% if c.recordas_quien %}{{ c.recordas_quien|capfirst }}{% else %}-{% endif %}</td>  <!-- Si no tiene quien atendió, muestra - y capitaliza la primera letra -->
                 <td>{{ c.fecha }}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="7">No hay comentarios en este rango</td></tr>
+            <tr><td colspan="9">No hay comentarios en este rango</td></tr>
             {% endfor %}
         </tbody>
     </table>

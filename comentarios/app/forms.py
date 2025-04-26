@@ -30,9 +30,27 @@ class ComentarioForm(forms.ModelForm):
         self.fields['limpieza'].widget = forms.RadioSelect(choices=[(i, '★' * i) for i in range(1, 6)])
         
         # Verificamos el sector y actualizamos las opciones para el campo recordas_quien
-        if sector in PERSONAL_POR_SECTOR:
+        if sector and sector in PERSONAL_POR_SECTOR:
             choices = [('', '---------')] + [(p, p) for p in PERSONAL_POR_SECTOR[sector]]
             self.fields['recordas_quien'].widget = forms.Select(choices=choices)
         else:
             self.fields['recordas_quien'].widget = forms.TextInput(attrs={'placeholder': '¿Recordás quién te atendió?'})
+    
+    # Personalización de la validación para amabilidad, eficiencia y limpieza
+    def clean_amabilidad(self):
+        amabilidad = self.cleaned_data.get('amabilidad')
+        if not amabilidad:
+            raise forms.ValidationError("Seleccione un valor del 1 al 10")
+        return amabilidad
 
+    def clean_eficiencia(self):
+        eficiencia = self.cleaned_data.get('eficiencia')
+        if not eficiencia:
+            raise forms.ValidationError("Seleccione un valor del 1 al 10")
+        return eficiencia
+
+    def clean_limpieza(self):
+        limpieza = self.cleaned_data.get('limpieza')
+        if not limpieza:
+            raise forms.ValidationError("Seleccione un valor del 1 al 10")
+        return limpieza
