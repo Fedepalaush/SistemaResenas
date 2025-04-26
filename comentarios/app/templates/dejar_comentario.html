@@ -27,8 +27,7 @@
   <form method="post" class="row g-3">
     {% csrf_token %}
     
-    <!-- Campo oculto de sector -->
-    {{ form.sector }}
+    <input type="hidden" name="sector" value="{{ form.sector.value }}" />
 
     <!-- Campo de Nombre (Opcional) -->
     <div class="col-md-12 mb-3">

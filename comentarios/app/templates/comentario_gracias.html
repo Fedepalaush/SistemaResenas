@@ -6,21 +6,34 @@
     <meta charset="UTF-8">
     <title>¡Gracias!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         .instagram-link {
             font-size: 1.25rem;
             font-weight: bold;
-            color: #E1306C; /* color de Instagram */
+            color: #C13584; /* violeta tipo Instagram */
             text-decoration: none;
         }
 
         .instagram-link:hover {
-            color: #c7225c;
+            color: #a12c6c;
             text-decoration: underline;
         }
 
         .logo {
             max-width: 150px;
+        }
+
+        .btn-votar-otro {
+            background-color: #6f42c1; /* Violeta fuerte */
+            color: #ffffff; /* Texto blanco */
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .btn-votar-otro:hover {
+            background-color: #5a379e; /* Un poquito más oscuro en hover */
+            color: #ffffff; /* Mantener el texto blanco en hover también */
         }
     </style>
 </head>
@@ -28,15 +41,25 @@
 
     <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px;">
         <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="mb-4 logo mx-auto d-block">
+        
         <h2 class="mb-3 text-danger">¡Gracias por tu comentario!</h2>
-        <p class="fs-5">
-            No olvides de seguirnos en 
+
+        <p class="fs-5 d-flex justify-content-center align-items-center gap-2">
+            No olvides seguirnos en 
             <a href="https://www.instagram.com/minimercado.champita" 
-               class="instagram-link" 
+               class="instagram-link d-inline-flex align-items-center gap-1" 
                target="_blank">
-               Instagram 📸
+                Instagram <i class="fab fa-instagram"></i>
             </a>
         </p>
+
+        <hr class="my-4">
+
+        <p class="fs-6 mb-3">¿Te gustaría calificar otro sector?</p>
+
+        <a href="{% url 'elegir_sector' %}" class="btn btn-votar-otro">
+            Votar otro sector
+        </a>
     </div>
 
 </body>
