@@ -6,19 +6,48 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .forms import ComentarioForm
 from .models import Comentario
+from django.contrib.auth import login, logout
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+
+# Vista para login
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f'Bienvenido {user.username}!')
+            return redirect('admin_comentarios')  # Redirige a la página principal o la página que desees
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos')
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'login.html', {'form': form})
+
+# Vista para logout
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'Has cerrado sesión exitosamente')
+    return redirect('login')  # Redirige al login después de cerrar sesión
 
 def dejar_comentario(request, sector):
-    print(f"Sector recibido: {sector}")
+
 
     if request.method == 'POST':
-        # Imprime los datos que se están enviando en el POST
-        print(f"Datos enviados en el POST: {request.POST}")
-
-        form = ComentarioForm(request.POST)
+        # Obtener el valor de 'sector' de los datos POST, si está presente
+        sector = request.POST.get('sector', sector)
+        
+        # Pasamos sector a 'initial' para que se mantenga en el formulario
+        form = ComentarioForm(request.POST, initial={'sector': sector})
+        
         if form.is_valid():
             comentario = form.save(commit=False)
-            comentario.sector = sector
+            comentario.sector = sector  # Aseguramos que el sector sea guardado correctamente
             comentario.save()
 
             # Marcar el sector como votado en la sesión
@@ -31,6 +60,7 @@ def dejar_comentario(request, sector):
         else:
             print("Errores del formulario:", form.errors)
     else:
+        # Cuando el formulario es mostrado por primera vez, pasamos 'sector' en 'initial'
         form = ComentarioForm(initial={'sector': sector})
 
     return render(request, 'dejar_comentario.html', {'form': form, 'sector': sector})
@@ -40,7 +70,7 @@ def comentario_gracias(request):
     """Vista de agradecimiento luego de dejar un comentario."""
     return render(request, 'comentario_gracias.html')
 
-
+@login_required
 def administrar_comentarios(request):
     """Vista para administrar los comentarios: filtros, estadísticas, listados y paginación."""
     hoy = date.today()
@@ -94,6 +124,7 @@ def administrar_comentarios(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+
     return render(request, 'admin_comentarios.html', {
         'nombre_filtro': nombre_filtro,
         'fecha_inicio': fecha_inicio,
@@ -120,4 +151,5 @@ def elegir_sector(request):
 
     return render(request, 'elegir_sector.html', {'sectores_votados': sectores_votados})
 
-
+def handler404(request, exception):
+    return redirect('elegir_sector')

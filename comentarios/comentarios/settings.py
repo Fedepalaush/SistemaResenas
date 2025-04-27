@@ -25,6 +25,7 @@ SECRET_KEY = "django-insecure-+34ouj*h*6$5c!sv92c_9v@e^gt9ltmqammewk9*hx#s2=dxeb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = []
 
 
@@ -126,3 +127,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = 'login'  # La URL de login, ajusta el nombre si es necesario
+LOGIN_REDIRECT_URL = 'admin_comentarios'  # Página a la que se redirige el usuario después de iniciar sesión
